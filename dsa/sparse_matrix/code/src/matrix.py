@@ -7,13 +7,14 @@ def getTuples(location):
     with open(location, 'r') as file:
         try:
             #number of rows and cols from file
-            rows = int(file.readline().strip().split("=")[1])+1
-            cols = int(file.readline().strip().split("=")[1])+1
+            rows = int(file.readline().strip().split("=")[1])
+            cols = int(file.readline().strip().split("=")[1])
         except:
             raise ValueError("Invalid file format") # when format is invalid return this
         tuples = []
         for line in file:
-            if line.startswith("(") and line.endswith(")\n"):
+
+            if line.startswith("("):
                 values = line.strip("()\n").split(",")
                 if len(values) != 3:
                     raise ValueError("Input file has wrong format")
@@ -115,20 +116,37 @@ base_dir=os.path.dirname(__file__)
 input_loc=os.path.join(base_dir,"../../sample_inputs")
 output_loc=os.path.join(base_dir,"../../sample_outputs")
 #define file locat
-matrix1_loc=os.path.join(base_dir,f"{input_loc}/easy_sample_01_2.txt")
-matrix2_loc=os.path.join(base_dir,f"{input_loc}/easy_sample_02_2.txt")
+file1=os.path.abspath(input("enter path to the first matrix file: "))
+matrix1_loc=os.path.join(base_dir,file1)
+print(matrix1_loc)
+file2=os.path.abspath(input("enter path to the second matrix file: "))
+matrix2_loc=os.path.join(base_dir,file2)
 
 i,j,A=getTuples(matrix1_loc)
 x,y,B=getTuples(matrix2_loc)
 #convert tuple to sparse matrix
 M1=Sparcematrix(A,i,j)
 M2=Sparcematrix(B,x,y)
-#perform addition of matrix
-summation=Add(M1,M2)
-toFile(summation,f"{output_loc}/summation.txt")
-#substraction of matrix
-subtraction=Subs(M1,M2)
-toFile(subtraction,f"{output_loc}/subtraction.txt")
-#multiplication of matrix
-Multiplication=Mult(M1,M2)
-toFile(Multiplication,f"{output_loc}/Multiplication.txt")
+# performing operations
+print("choose operation")
+print("1. Addition")
+print("2. Subtraction")
+print("3. Multiplication")
+choice=int(input())
+if choice==1:
+    #perform addition of matrix
+    summation=Add(M1,M2)
+    toFile(summation,f"{output_loc}/summation.txt")
+    print(f"check result in {output_loc}/summation.txt ")
+elif choice==2:
+    #substraction of matrix
+    subtraction=Subs(M1,M2)
+    toFile(subtraction,f"{output_loc}/subtraction.txt")
+    print(f"check result in {output_loc}/subtration.txt ")
+elif choice==3:
+    #multiplication of matrix
+    Multiplication=Mult(M1,M2)
+    toFile(Multiplication,f"{output_loc}/Multiplication.txt")
+    print(f"check result in {output_loc}/Multiplicationtion.txt ")
+else:
+    raise ValueError("invalid choice")
